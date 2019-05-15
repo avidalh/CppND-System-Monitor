@@ -40,6 +40,7 @@ class ProcessParser {
         static int get_number_of_running_processes();
         static string get_os_name();
         static std::string print_cpu_stats(std::vector<std::string> values1, std::vector<std::string>values2);
+        static bool isPidExisting(string pid);
 };
 
 // TODO: Define all of the above functions below:
@@ -386,5 +387,13 @@ int ProcessParser::get_number_of_running_processes()
         }
     }
     return result;
+}
+
+bool ProcessParser::isPidExisting(string pid)
+{
+    // update the procs list
+    get_pid_list();
+    // return True if pid is in pid list
+    return if (std::find_if(pid_list.begin(), pid_list.end(), pid) != pid_list.end())
 }
 
