@@ -18,8 +18,6 @@
 #include <unistd.h>
 #include "constants.h"
 
-//#include "constants.h"
-
 using namespace std;
 
 class ProcessParser {
@@ -332,23 +330,22 @@ int ProcessParser::get_total_threads()
     string line;
     int result = 0;
     string name = "Threads:";
-    vector<string>_list = ProcessParser::get_pid_list();
+    vector<string>pid_list = ProcessParser::get_pid_list();
   
-    for (int i=0 ; i<_list.size();i++) {
-    string pid = _list[i];
-    //}
-  
-    //getting every process and reading their number of their threads
-    ifstream stream = Util::getStream((Path::basePath() + pid + Path::statusPath()));
-    while (std::getline(stream, line)) {
-        if (line.compare(0, name.size(), name) == 0) {
-            istringstream buf(line);
-            istream_iterator<string> beg(buf), end;
-            vector<string> values(beg, end);
-            result += stoi(values[1]);
-            break;
+    for (int i=0 ; i<pid_list.size();i++) {
+        string pid = pid_list[i];
+
+        //getting every process and reading their number of their threads
+        ifstream stream = Util::getStream((Path::basePath() + pid + Path::statusPath()));
+        while (std::getline(stream, line)) {
+            if (line.compare(0, name.size(), name) == 0) {
+                istringstream buf(line);
+                istream_iterator<string> beg(buf), end;
+                vector<string> values(beg, end);
+                result += stoi(values[1]);
+                break;
+            }
         }
-    }
     }
     return result;
 }
@@ -392,8 +389,11 @@ int ProcessParser::get_number_of_running_processes()
 bool ProcessParser::is_pid_existing(string pid)
 {
     // update the procs list
-    get_pid_list();
-    // return True if pid is in pid list
-    return if (std::find_if(pid_list.begin(), pid_list.end(), pid) != pid_list.end())
+    vector<string>pid_list = ProcessParser::get_pid_list();
+    // return true if pid is in pid list
+    if (std::find(pid_list.begin(), pid_list.end(), pid) != pid_list.end())
+    {
+        return true;
+    }
+    return false;
 }
-
