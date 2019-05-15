@@ -41,9 +41,7 @@ class ProcessParser {
         static bool is_pid_existing(string pid);
 };
 
-// TODO: Define all of the above functions below:
-
-//Reading /proc/[PID]/status for memory status of specific process
+// Reading /proc/[PID]/status for memory status of specific process 
 string ProcessParser::get_vm_size(string pid)
 {
     string line;
@@ -68,6 +66,7 @@ string ProcessParser::get_vm_size(string pid)
     return to_string(result);
 }
 
+// Reading CPU usage percentage 
 string ProcessParser::get_cpu_percent(string pid)
 {
     string line;
@@ -93,6 +92,7 @@ string ProcessParser::get_cpu_percent(string pid)
     return to_string(result);
 }
 
+// reading procs uptime
 string ProcessParser::get_proc_up_time(string pid)
 {
     string line;
@@ -108,6 +108,7 @@ string ProcessParser::get_proc_up_time(string pid)
     return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
 }
 
+// system uptime
 long int ProcessParser::get_sys_up_time()
 {
     string line;
@@ -119,6 +120,7 @@ long int ProcessParser::get_sys_up_time()
     return stoi(values[0]);
 }
 
+// user's processes
 string ProcessParser::get_proc_user(string pid)
 {
     string line;
@@ -147,6 +149,7 @@ string ProcessParser::get_proc_user(string pid)
     return "";
 }
 
+// reading processes id into list
 vector<string> ProcessParser::get_pid_list()
 {
     DIR* dir;
@@ -171,6 +174,7 @@ vector<string> ProcessParser::get_pid_list()
     return container;
 }
 
+// reading command line string for each process
 string ProcessParser::get_cmd(string pid)
 {
     string line;
@@ -179,6 +183,7 @@ string ProcessParser::get_cmd(string pid)
     return line;
 }
 
+// getting the CPU number of cores
 int ProcessParser::get_number_of_cores()
 {
     // Get the number of host cpu cores
@@ -196,6 +201,7 @@ int ProcessParser::get_number_of_cores()
     return 0;
 }
 
+// to get the core usage percentage
 vector<string> ProcessParser::get_sys_cpu_percent(string coreNumber)
 {
     // It is possible to use this method for selection of data for overall cpu or every core.
@@ -218,6 +224,7 @@ vector<string> ProcessParser::get_sys_cpu_percent(string coreNumber)
     return (vector<string>());
 }
 
+// active CPU time
 float get_sys_active_cpu_time(vector<string> values)
 {
     return (stof(values[S_USER]) +
@@ -235,6 +242,7 @@ float get_sys_idle_cpu_time(vector<string>values)
     return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
 }
 
+// print CPU statistics
 string ProcessParser::print_cpu_stats(vector<string> values1, vector<string> values2)
 {
 
@@ -250,6 +258,7 @@ We use a formula to calculate overall activity of processor.
     return to_string(result);
 }
 
+// reading system RAM usage percentage
 float ProcessParser::get_sys_ram_percent()
 {
     string line;
@@ -289,6 +298,7 @@ float ProcessParser::get_sys_ram_percent()
     return float(100.0*(1-(free_mem/(total_mem-buffers))));
 }
 
+// reading system kernel version
 string ProcessParser::get_sys_kernel_version()
 {
     string line;
@@ -305,6 +315,7 @@ string ProcessParser::get_sys_kernel_version()
     return "";
 }
 
+// getting OS name
 string ProcessParser::get_os_name()
 {
     string line;
@@ -325,6 +336,7 @@ string ProcessParser::get_os_name()
 
 }
 
+// calculate the total number of threads
 int ProcessParser::get_total_threads()
 {
     string line;
@@ -350,6 +362,7 @@ int ProcessParser::get_total_threads()
     return result;
 }
 
+// calculate the total number of processes
 int ProcessParser::get_total_number_of_processes()
 {
     string line;
@@ -368,6 +381,7 @@ int ProcessParser::get_total_number_of_processes()
     return result;
 }
 
+// calculate the total number of active processes
 int ProcessParser::get_number_of_running_processes()
 {
     string line;
@@ -386,13 +400,15 @@ int ProcessParser::get_number_of_running_processes()
     return result;
 }
 
+// checking if the passed PID exist in the system
 bool ProcessParser::is_pid_existing(string pid)
 {
-    // update the procs list
+    // get the processes list
     vector<string>pid_list = ProcessParser::get_pid_list();
-    // return true if pid is in pid list
+    // check if pid is in the list
     if (std::find(pid_list.begin(), pid_list.end(), pid) != pid_list.end())
     {
+        // return true if it's in the list
         return true;
     }
     return false;
